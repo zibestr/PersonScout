@@ -1,4 +1,4 @@
-from moviepy.editor import VideoFileClip
+from moviepy.editor import VideoFileClip, AudioFileClip
 import numpy as np
 from math import ceil
 import cv2
@@ -10,6 +10,7 @@ from logger import log
 @log(msg='splitting video into frames and audio')
 def split_stream(filepath: str | os.PathLike,
                  step: int = 1e3,
+                 sample_rate: int = 16e3,
                  half_precision: bool = True) ->\
                     tuple[np.ndarray[Image.Image], np.ndarray[np.ndarray[np.float16 | np.float32]]]:
     """Splits video into array of images and audiostream.
@@ -17,6 +18,7 @@ def split_stream(filepath: str | os.PathLike,
     Args:
         filepath (str | os.PathLike): Path where video is stored.
         step (int, optional): Step by which frames are extracted from video in milliseconds. Defaults to 1e3.
+        sample_rate (int, optional): Sample rate for audio. Defaults to 16e3.
         half_precision (bool, optional): Encode sound samples with half precision. Defaults to True.
 
     Raises:
@@ -30,7 +32,7 @@ def split_stream(filepath: str | os.PathLike,
         raise FileNotFoundError(f'File not found at {filepath}')
     
     with VideoFileClip(filepath) as clip:
-        audio = clip.audio.to_soundarray(fps=16e3, nbytes=(2 if half_precision else 4)).\
+        audio = clip.audio.to_soundarray(fps=sample_rate, nbytes=(2 if half_precision else 4)).\
             astype(dtype=(np.float16 if half_precision else np.float32))
 
     cap = cv2.VideoCapture(filepath)
