@@ -1,14 +1,15 @@
 import librosa
 import torch
 import torchaudio
-import numpy as np
 import cv2
-from PIL import Image
 from math import ceil
 import os
+from tqdm import tqdm
 from typing import Sequence
 from functools import partial
 from logger import log
+import warnings
+warnings.filterwarnings("ignore")
 
 
 @log(msg='splitting video into frames and audio')
@@ -16,8 +17,7 @@ def split_stream(filepath: str | os.PathLike,
                  step: int = 1e3,
                  sample_rate: int = 16e3,
                  half_precision: bool = True) ->\
-                    tuple[np.ndarray[Image.Image],
-                          torch.Tensor[torch.float16 | torch.float32]]:
+                    tuple[torch.Tensor, torch.Tensor]:
     """Splits video into array of images and audiostream.
 
     Args:
@@ -38,13 +38,14 @@ def split_stream(filepath: str | os.PathLike,
     
     audio_array, sr = librosa.load(filepath)
     audio = torch.from_numpy(audio_array)
-    audio = (torchaudio.transforms.Resample(orig_freq=sr, new_freq=sample_rate)(audio_tensor)).\
+    audio = (torchaudio.transforms.Resample(orig_freq=sr, new_freq=sample_rate)(audio)).\
         to(dtype=(torch.float16 if half_precision else torch.float32))
-
+    
     cap = cv2.VideoCapture(filepath)
     duration = (cap.get(cv2.CAP_PROP_FRAME_COUNT) / cap.get(cv2.CAP_PROP_FPS))
     total_frames = ceil(duration / (step / 1e3))
-    video = np.empty(shape=(total_frames), dtype=Image.Image)
+    height, width = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)), int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    video = torch.empty(size=(total_frames, height, width, 3), dtype=torch.uint8)
 
     frame_count, pos = 0, 0
     while cap.isOpened():
@@ -53,18 +54,17 @@ def split_stream(filepath: str | os.PathLike,
         if not ret:
             break
         
-        video[frame_count] = Image.fromarray(frame)
+        video[frame_count] = torch.from_numpy(frame)
         frame_count += 1
         pos += step
     
-    cap.release()       
+    cap.release()
     return (video, audio)
 
 
-@log()
-def detect_flaw(audio: np.ndarray[np.ndarray[np.float16 | np.float32]],
-      sample_rate: int = 16e3):
-    pass
+
+for i in ['a', 'b', 'c', 'd', 'e']:
+    split_stream(f'{i}.mp4')
 
 
 @log(msg='getting tensors of frames and audio for given videos')
@@ -74,7 +74,7 @@ def get_batch(filepaths: Sequence[str | os.PathLike],
     sample_rate = 16e3
 
     audio_tensors, video_tensors = list(), list()
-    for fp in filepaths:
+    for fp in tqdm(filepaths):
         video, audio = split_stream(fp, step=step, sample_rate=sample_rate, half_precision=half_precision)
         video_tensors.append(video)
         audio_tensors.append(audio)
