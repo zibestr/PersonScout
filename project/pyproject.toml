@@ -18,6 +18,7 @@ redis = "^5.2.0"
 python-dotenv = "^1.0.1"
 pgvector = "^0.3.6"
 gunicorn = "^23.0.0"
+django-bootstrap4 = "^24.4"
 
 
 [tool.poetry.group.ml.dependencies]
@@ -27,7 +28,6 @@ torchaudio = {version = "^2.5.1+cpu", source = "pytorch_cpu"}
 
 
 [tool.poetry.group.triton.dependencies]
-tensorflow = "^2.18.0"
 gevent = "^24.10.3"
 geventhttpclient = "^2.3.1"
 opencv-python = "^4.10.0.84"

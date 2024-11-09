@@ -1,16 +1,18 @@
 {% extends 'video_app/base.html' %}
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{% bootstrap_messages %}
 {% block main %}
 {{ form.errors }}
-<form method="post">
-    {% csrf_token %}
-    {% for field in form %}
-    <div>
-        {% if field != form.password %}
-            <label> {{ field.label }}</label>
-            <p>{{ field }}</p>
-        {% endif %}
-    </div>
-    {% endfor %}
-    <button type="submit">Обновить данные</button>
+<form method="post" class="form">
+  {% csrf_token %}
+  {% bootstrap_form form %}
+  {% buttons %}
+    <button type="submit" class="btn btn-primary">
+      Зарегистрироваться
+    </button>
+  {% endbuttons %}
 </form>
+
 {% endblock %}

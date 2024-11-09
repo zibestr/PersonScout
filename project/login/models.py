@@ -14,6 +14,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=40, null=True)
     patronymic = models.CharField(max_length=40, null=True)
 
+    preferred_vacancies = models.ManyToManyField('video_app.Vacancy')
+
     USERNAME_FIELD = 'email'
 
     objects = CustomUserManager()
