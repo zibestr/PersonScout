@@ -1,0 +1,9 @@
+{% extends 'video_app/base.html' %}
+{% block main %}
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Войти</button>
+</form>
+<a href="{% url 'register-page' %}">Нет аккаунта?</a>
+{% endblock %}
