@@ -1,0 +1,21 @@
+{% extends 'video_app/base.html' %}
+{% block main %}
+<!-- Контейнер для карточек вакансий -->
+<div class="container mt-5">
+    <div class="row">
+        {% for vacancy in vacancies %}
+        <!-- Пример карточки вакансии -->
+        <div class="col-md-4 mb-4">
+            <div class="card bg-light mb-3" style="max-width: 18rem;" href="{% url 'vacancy-info' pk=vacancy.id%}">
+                <div class="card-body">
+                        <a href="{% url 'vacancy-info' pk=vacancy.id%}">
+                            <h5 class="card-title text-center" style="color: black">{{ vacancy.name }}</h5>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

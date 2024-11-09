@@ -1,0 +1,17 @@
+{% extends 'video_app/base.html' %}
+{% load static %}
+{% block main %}
+<div class="mainText">
+    Загрузите видео в эту форму
+</div>
+<div>
+    <form enctype="multipart/form-data" action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="progress-wrapper">
+            <div id="progress-bar-file" class="progress"> </div>
+        </div>
+        <button type="button" onclick="postFile()">Отправить</button>
+    </form>
+</div>
+{% endblock %}

@@ -5,7 +5,7 @@ import base64
 from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
 from django.http import HttpRequest, HttpResponseRedirect, HttpResponse
-from .models import Video, PersonalityGroup, Personality
+from .models import Video, PersonalityGroup, Personality, Vacancy
 from .forms import UploadFileForm
 from django.contrib.auth.decorators import user_passes_test
 from . import utils
@@ -45,3 +45,13 @@ def hr_main_view(request):
     return render(request, 'video_app/hr_main.html',
                   {'groups': PersonalityGroup.objects.all(),
                    'personality_rows': personality_rows})
+
+
+def vacancies_page(request):
+    return render(request, 'video_app/vacancies.html',
+                  {'vacancies': Vacancy.objects.all()})
+
+
+def vacancy_info_view(request, pk: int):
+    return render(request, 'video_app/vacancy_description.html',
+                  {'vacancy': Vacancy.objects.get(id=pk)})
