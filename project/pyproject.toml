@@ -1,0 +1,44 @@
+[tool.poetry]
+package-mode = false
+name = "project"
+version = "0.1.0"
+description = ""
+
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.13"
+numpy = "1.26.1"
+
+
+[tool.poetry.group.backend.dependencies]
+Django = "^5.1.3"
+django-celery-beat = "^2.7.0"
+psycopg2-binary = "^2.9.10"
+redis = "^5.2.0"
+python-dotenv = "^1.0.1"
+pgvector = "^0.3.6"
+gunicorn = "^23.0.0"
+
+
+[tool.poetry.group.ml.dependencies]
+torch = {version = "^2.5.1+cpu", source = "pytorch_cpu"}
+torchvision = {version = "^0.20.1+cpu", source = "pytorch_cpu"}
+torchaudio = {version = "^2.5.1+cpu", source = "pytorch_cpu"}
+
+
+[tool.poetry.group.triton.dependencies]
+tensorflow = "^2.18.0"
+gevent = "^24.10.3"
+geventhttpclient = "^2.3.1"
+opencv-python = "^4.10.0.84"
+tritonclient = "^2.51.0"
+
+
+[[tool.poetry.source]]
+name = "pytorch_cpu"
+url = "https://download.pytorch.org/whl/cpu"
+priority = "explicit"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

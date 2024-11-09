@@ -1,0 +1,36 @@
+{% extends 'video_app/base.html' %}
+{% load static %}
+{% block main %}
+<div class="mainText">
+    Загрузите видео в эту форму
+</div>
+<div>
+    <form enctype="multipart/form-data" action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="progress-wrapper">
+            <div id="progress-bar-file" class="progress"> </div>
+        </div>
+        <button type="button" onclick="postFile()">Отправить</button>
+    </form>
+</div>
+<div>
+    <table>
+        <tbody class="table">
+            {% for g in groups %}
+            <tr class="table-row">
+                <td class="table-elem">{{ g }}</td>
+                {% for p in g.personality_set.all %}
+                    <td class="table-elem">{{ p }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+        <!-- <tr>
+            {% for g in groups %}
+            <th>{{ g }}</th>
+            {% endfor %}
+        </tr> -->
+    </table>
+</div>
+{% endblock %}
