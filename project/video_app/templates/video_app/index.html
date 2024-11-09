@@ -1,7 +1,113 @@
 {% extends 'video_app/base.html' %}
 {% load static %}
 {% block main %}
-<div class="mainText">
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Профиль пользователя</h2>
+            <form method="post" class="form">
+                <div class="form-group">
+                    <label for="{{ form.first_name.id_for_label }}">Имя</label>
+                    <input type="text" class="form-control" id="{{ form.first_name.id_for_label }}"
+                    {% if form.first_name.value != None %}value="{{ form.first_name.value|stringformat:'s' }}"{% endif %}
+                     name="{{ form.first_name.name }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.last_name.id_for_label }}">Фамилия</label>
+                    <input type="text" class="form-control" id="{{ form.last_name.id_for_label }}"
+                    {% if form.name.value != None %}value="{{ form.last_name.value|stringformat:'s' }}"{% endif %}
+                     name="{{ form.last_name.name }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.patronymic.id_for_label }}">Отчество</label>
+                    <input type="text" class="form-control" id="{{ form.patronymic.id_for_label }}"
+                    {% if form.name.value != None %}value="{{ form.patronymic.value|stringformat:'s' }}"{% endif %}
+                     name="{{ form.patronymic.name }}">
+                </div>
+                <div class="form-group form-check">
+                    <input type="checkbox" class="form-check-input" id="vacancyCheckbox" value="false">
+                    <label class="form-check-label" for="vacancyCheckbox">Хочу указать вакансию</label>
+                </div>
+                <div class="form-group" id="vacancySelect" style="display:none;">
+                    <label for="desiredVacancy">Желаемая вакансия</label>   
+                    <select class="form-control" id="desiredVacancy">
+                        {% for vacancy in vacancies %}
+                        <option>{{ vacancy }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <h2>Видеокарточки
+
+                <button class="btn btn-success float-right" id="addVideoCard">Добавить видеокарточку</button>
+            </h2>
+            <div class="row">
+                <!-- Пример видеокарточки -->
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="Превью видео">
+                        <div class="card-body">
+                            <h5 class="card-title">Название видео</h5>
+                            <a href="#" class="btn btn-primary">Скачать</a>
+                            <a href="#" class="btn btn-danger">Удалить</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="Превью видео">
+                        <div class="card-body">
+                            <h5 class="card-title">Название видео</h5>
+                            <a href="#" class="btn btn-primary">Скачать</a>
+                            <a href="#" class="btn btn-danger">Удалить</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="Превью видео">
+                        <div class="card-body">
+                            <h5 class="card-title">Название видео</h5>
+                            <a href="#" class="btn btn-primary">Скачать</a>
+                            <a href="#" class="btn btn-danger">Удалить</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="Превью видео">
+                        <div class="card-body">
+                            <h5 class="card-title">Название видео</h5>
+                            <a href="#" class="btn btn-primary">Скачать</a>
+                            <a href="#" class="btn btn-danger">Удалить</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="Превью видео">
+                        <div class="card-body">
+                            <h5 class="card-title">Название видео</h5>
+                            <a href="#" class="btn btn-primary">Скачать</a>
+                            <a href="#" class="btn btn-danger">Удалить</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Добавьте остальные видеокарточки аналогично -->
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    // Простая логика для показа/скрытия поля выбора вакансии
+    document.getElementById('vacancyCheckbox').addEventListener('change', function() {
+        document.getElementById('vacancySelect').style.display = this.checked ? 'block' : 'none';
+    });
+</script>
+<!-- <div class="mainText">
     Загрузите видео в эту форму
 </div>
 <div>
@@ -13,24 +119,5 @@
         </div>
         <button type="button" onclick="postFile()">Отправить</button>
     </form>
-</div>
-<div>
-    <table>
-        <tbody class="table">
-            {% for g in groups %}
-            <tr class="table-row">
-                <td class="table-elem">{{ g }}</td>
-                {% for p in g.personality_set.all %}
-                    <td class="table-elem">{{ p }}</td>
-                {% endfor %}
-            </tr>
-            {% endfor %}
-        </tbody>
-        <!-- <tr>
-            {% for g in groups %}
-            <th>{{ g }}</th>
-            {% endfor %}
-        </tr> -->
-    </table>
-</div>
+</div> -->
 {% endblock %}
