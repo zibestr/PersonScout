@@ -1,0 +1,29 @@
+{% extends 'video_app/base.html' %}
+{% load static %}
+{% block main %}
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                {% for g in groups %}
+                <th scope="col">{{ g }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in personality_rows %}
+            <tr>
+                {% for p in row %}
+                    <td>{{ p }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+        <!-- <tr>
+            {% for g in groups %}
+            <th>{{ g }}</th>
+            {% endfor %}
+        </tr> -->
+    </table>
+</div>
+{% endblock %}

@@ -2,3 +2,6 @@ __pycache__
 *.venv
 *.log
 *.mp4
+mediafiles
+staticfiles
+.env

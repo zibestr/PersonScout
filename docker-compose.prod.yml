@@ -1,0 +1,88 @@
+services:
+  web:
+    image: python_django
+    build: ./project
+    command: python3 -m gunicorn django_video.wsgi:application --bind 0.0.0.0:8003 --log-level debug
+    volumes:
+      - static_volume:/staticfiles
+      - ./mediafiles:/mediafiles
+      - ./project:/app/
+    expose:
+      - 8003
+    env_file: .env
+    environment:
+      - DEBUG=1
+      - PG_HOST=pgdb
+      - CELERY_BROKER=redis://redis:6379
+      - CELERY_BACKEND=redis://redis:6379
+      - TRITON_HOST=triton
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  postgres:
+    image: pgvector/pgvector:pg17
+    environment:
+      - POSTGRES_DB=django_video
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - PGUSER=postgres
+    container_name: pgdb
+    volumes:
+      - pgdbdata:/var/lib/postgresql/data/
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+
+  celery:
+    image: python_django
+    pull_policy: never
+    command: python3 -m celery --app=django_video worker --loglevel=info
+    volumes:
+      - ./project:/app
+    env_file: .env
+    environment:
+      - PG_HOST=pgdb
+      - CELERY_BROKER=redis://redis:6379
+      - CELERY_BACKEND=redis://redis:6379
+      - TRITON_HOST=triton
+    depends_on:
+      web:
+        condition: service_started
+      redis:
+        condition: service_started
+
+  redis:
+    image: redis:7-alpine
+
+  nginx:
+    build: ./nginx
+    volumes:
+      - static_volume:/staticfiles
+      - ./mediafiles:/mediafiles
+    ports:
+      - 1337:80
+    depends_on:
+      - web
+
+  triton:
+    image: nvcr.io/nvidia/tritonserver:24.10-py3
+    command: tritonserver --model-repository=/models
+    environment:
+      - SHM_SIZE=256M
+    volumes:
+      - ./model_repository:/models
+      - ./mediafiles:/mediafiles
+    expose:
+      - 8000
+      - 8001
+      - 8002
+
+volumes:
+  pgdbdata:
+  static_volume:
