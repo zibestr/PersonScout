@@ -102,4 +102,4 @@ def get_batch(filepaths: Sequence[str | os.PathLike],
         video_tensors.append(video)
         audio_tensors.append(audio)
 
-    return (video_tensors, torch.nn.utils.rnn.pad_sequence(audio_tensors).T)
+    return (torch.stack(video_tensors), torch.nn.utils.rnn.pad_sequence(audio_tensors).T)
