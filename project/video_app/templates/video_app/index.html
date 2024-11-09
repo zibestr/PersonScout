@@ -6,6 +6,7 @@
         <div class="col-md-6">
             <h2>Профиль пользователя</h2>
             <form method="post" class="form">
+                {% csrf_token %}
                 <div class="form-group">
                     <label for="{{ form.first_name.id_for_label }}">Имя</label>
                     <input type="text" class="form-control" id="{{ form.first_name.id_for_label }}"
@@ -15,13 +16,13 @@
                 <div class="form-group">
                     <label for="{{ form.last_name.id_for_label }}">Фамилия</label>
                     <input type="text" class="form-control" id="{{ form.last_name.id_for_label }}"
-                    {% if form.name.value != None %}value="{{ form.last_name.value|stringformat:'s' }}"{% endif %}
+                    {% if form.last_name.value != None %}value="{{ form.last_name.value|stringformat:'s' }}"{% endif %}
                      name="{{ form.last_name.name }}" required>
                 </div>
                 <div class="form-group">
                     <label for="{{ form.patronymic.id_for_label }}">Отчество</label>
                     <input type="text" class="form-control" id="{{ form.patronymic.id_for_label }}"
-                    {% if form.name.value != None %}value="{{ form.patronymic.value|stringformat:'s' }}"{% endif %}
+                    {% if form.patronymic.value != None %}value="{{ form.patronymic.value|stringformat:'s' }}"{% endif %}
                      name="{{ form.patronymic.name }}">
                 </div>
                 <div class="form-group form-check">

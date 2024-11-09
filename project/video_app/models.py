@@ -4,13 +4,13 @@ from pgvector.django import VectorField
 
 class Video(models.Model):
     file = models.FileField()
-    vector = VectorField(dimensions=6)
-    cluster = models.SmallIntegerField()
+    vector = VectorField(dimensions=5, null=True)
     user = models.ForeignKey('login.CustomUser', on_delete=models.CASCADE)
 
 
 class Vacancy(models.Model):
     name = models.CharField(max_length=50)
+    vector = VectorField(dimensions=5, null=True)
     description = models.TextField()
 
     def __str__(self):

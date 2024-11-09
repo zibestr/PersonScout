@@ -27,7 +27,7 @@ class CustomLoginView(LoginView):
 
 
 class CustomAccountView(UpdateView):
-    template_name = 'login/account.html'
+    template_name = 'video_app/index.html'
     form_class = CustomUserChangeForm
     model = CustomUser
     
