@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'video_app.apps.VideoAppConfig',
-    'login.apps.LoginConfig'
+    'login.apps.LoginConfig',
+    'django_bootstrap4'
 ]
 
 MIDDLEWARE = [
