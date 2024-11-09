@@ -4,4 +4,4 @@ __pycache__
 *.mp4
 mediafiles
 staticfiles
-model_repository
+.env

@@ -38,6 +38,12 @@ class CustomAccountView(UpdateView):
         return redirect(reverse_lazy('account-page',
                                kwargs={'pk': user.pk}))
     
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Removing password-based authentication
+        if 'usable_password' in self.fields:
+            del self.fields['usable_password']
+    
 
 def logout_view(request):
     logout(request)
