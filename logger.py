@@ -13,8 +13,8 @@ def log(msg: str = None):
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            args_str = f'({', '.join(list(map(str, args))) if len(args) != 0 else ''}{', ' if len(kwargs) + len(args) != 0 else ''}'
-            kwargs_str = f'{', '.join(f'{key}={value}' for (key, value) in kwargs.items()) if len(kwargs) != 0 else ''})'
+            args_str = f'({", ".join(list(map(str, args))) if len(args) != 0 else ""}{", " if len(kwargs) + len(args) != 0 else ""}'
+            kwargs_str = f'{", ".join(f"{key}={value}" for (key, value) in kwargs.items()) if len(kwargs) != 0 else ""})'
             params = args_str + kwargs_str
             try:
                 start = time.time()
