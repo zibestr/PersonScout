@@ -30,14 +30,15 @@ max_batch_size : 0
 input [
   {
     name: "input_audio"
-    data_type: TYPE_FP16
+    data_type: TYPE_FP32
     dims: [1,-1]
+    reshape: {[1,-1]}
   }
 ]
 output [
   {
     name: "audio_embendings"
-	data_type: TYPE_FP16
+	  data_type: TYPE_FP32
     dims: [1,192]
   }
 ]
