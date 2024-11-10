@@ -72,9 +72,9 @@ def account_view(request, pk):
     return render(request, 'video_app/index.html',
                   {'form': form,
                    'specialities': Speciality.objects.all(),
-                   'mbti': OCEAN2MBTI(request.user.video.vector.tolist()) if request.user.video is not None
+                   'mbti': OCEAN2MBTI(request.user.video.vector.tolist())[1] if request.user.video is not None
                                       else None,
-                   'ocean': request.user.video.vector.tolist() if request.user.video is not None else None})
+                   'ocean': list(map(lambda x: int(x * 10 + 0.5), request.user.video.vector.tolist())) if request.user.video is not None else None})
 
 
 class CustomAccountView(UpdateView):

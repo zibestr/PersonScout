@@ -55,13 +55,6 @@
             </form>
         </div>
         <div class="col-md-6 ">
-            <!-- Шкала загрузки и обработки -->
-            <div class="mb-3">
-                <label for="progressBar" class="form-label">Загрузка и обработка</label>
-                <div class="progress">
-                    <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-            </div>
             {% if ocean %}
             <!-- Radar Chart -->
             <div class="mb-3">
@@ -73,7 +66,7 @@
             <!-- Тип личности по MBTI -->
             <div class="mb-3">
                 <label class="form-label">Тип личности по MBTI</label>
-                <h4 id="mbtiType">{{ mbti }}</h4>
+                <h4 id="mbtiType">{{ mbti|default:"" }}</h4>
             </div>
         </div>
     </div>

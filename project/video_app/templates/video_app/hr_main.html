@@ -7,7 +7,7 @@
             <form id="uploadForm" enctype="multipart/form-data" method="post" action="">
                 {% csrf_token %}
                 <div class="mb-3">
-                    <label for="{{ form.video.id_for_label }}" class="form-label">Прикрепите видеофайлы (до 5)</label>
+                    <label for="{{ form.video.id_for_label }}" class="form-label">Прикрепите видеофайлы</label>
                     <input type="file" class="form-control" id="{{ form.video.id_for_label }}"
                      name="{{ form.video.name }}" multiple accept="video/*" required>
                 </div>
@@ -24,8 +24,8 @@
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label for="{{ form.candidate_number.id_for_label }}" class="form-label">Количество кандидатов (от 1 до 10)</label>
-                    <input type="number" class="form-control" id="{{ form.candidate_number.id_for_label }}" name="{{ form.candidate_number.name }}" min="1" max="10" required>
+                    <label for="{{ form.candidate_number.id_for_label }}" class="form-label">Количество кандидатов</label>
+                    <input type="number" class="form-control" id="{{ form.candidate_number.id_for_label }}" name="{{ form.candidate_number.name }}" min="1" max="{{ max_number }}" value="{{ max_number }}" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Отправить</button>
             </form>
@@ -38,6 +38,7 @@
                 <div class="card-body">
                     <h5 class="card-title">{{ person.user.last_name|default:"" }} {{ person.user.first_name|default:"" }} {{ person.user.patronymic|default:"" }}</h5>
                     <p class="card-text">Тип личности: {{ person.mbti }}</p>
+                    <p class="card-text">Этот кандидат подходит примерно на: {{ person.user.distance|floatformat:2 }}%</p>
                     <a href="{% url 'cand-info' pk=person.user.id %}">
                         <button type="button" class="btn btn-primary">
                             Открыть

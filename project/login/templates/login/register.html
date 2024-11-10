@@ -3,16 +3,27 @@
 {% bootstrap_css %}
 {% bootstrap_javascript jquery='full' %}
 {% bootstrap_messages %}
-{% block main %}
-{{ form.errors }}
-<form method="post" class="form">
-  {% csrf_token %}
-  {% bootstrap_form form %}
-  {% buttons %}
-    <button type="submit" class="btn btn-primary">
-      Зарегистрироваться
-    </button>
-  {% endbuttons %}
-</form>
 
+{% block main %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm mt-5">
+        <div class="card-body">
+          <h2 class="card-title text-center mb-4">Регистрация</h2>
+          {{ form.errors }}
+          <form method="post" class="form">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary btn-block">
+                Зарегистрироваться
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

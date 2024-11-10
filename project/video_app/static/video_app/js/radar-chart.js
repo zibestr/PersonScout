@@ -15,7 +15,7 @@ var radarChart = new Chart(ctx, {
         scales: {
             r: {
                 suggestedMin: 0,
-                suggestedMax: 1
+                suggestedMax: 10
             }
         }
     }

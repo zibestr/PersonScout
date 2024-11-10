@@ -12,7 +12,7 @@ from . import tasks
 from .forms import FileFieldForm
 import numpy as np
 from .utils import OCEAN2MBTI
-from pgvector.django import L2Distance
+from pgvector.django import CosineDistance
 
 
 def root_page(request: HttpRequest):
@@ -36,9 +36,11 @@ def hr_main_view(request):
             return render(request, 'video_app/hr_main.html', 
                           {'show': True,
                            'user_info': [{'user': user,
-                                          'mbti': OCEAN2MBTI(user.video.vector) if user.video is not None else None}
-                                           for user in CustomUser.objects.filter(is_superuser=False)
-                                                        .order_by(L2Distance('video__vector', speciality.vector))[:cand_number]]})
+                                          'mbti': OCEAN2MBTI(user.video.vector)[1] if user.video is not None else None}
+                                           for user in CustomUser.objects.filter(is_superuser=False).annotate(distance=CosineDistance('video__vector', speciality.vector) * 100)
+                                                        .order_by(CosineDistance('video__vector', speciality.vector))[:cand_number]],
+                                           'max_number': len(CustomUser.objects.filter(is_superuser=False)
+                                                         .all())})
     else:
         form = FileFieldForm()
     return render(request, 'video_app/hr_main.html',
@@ -51,6 +53,6 @@ def hr_show_candidates(request, pk):
     cand = CustomUser.objects.get(id=pk)
     return render(request, 'video_app/candidat.html',
                   {'cand': cand,
-                   'mbti': OCEAN2MBTI(cand.video.vector.tolist() if cand.video is not None
-                                      else None),
-                   'ocean': cand.video.vector.tolist() if cand.video is not None else None})
+                   'mbti': OCEAN2MBTI(cand.video.vector.tolist())[1] if cand.video is not None
+                                      else None,
+                   'ocean': list(map(lambda x: int(x * 10 + 0.5), cand.video.vector.tolist())) if cand.video is not None else None})
