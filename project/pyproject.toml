@@ -19,6 +19,8 @@ python-dotenv = "^1.0.1"
 pgvector = "^0.3.6"
 gunicorn = "^23.0.0"
 django-bootstrap4 = "^24.4"
+librosa = "^0.10.2.post1"
+opencv-python = "^4.10.0.84"
 
 
 [tool.poetry.group.ml.dependencies]

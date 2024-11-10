@@ -18,11 +18,11 @@ function getCookie(name) {
     return cookieValue;
 }
 
-function postFile() {
+_("load_button").addEventListener("click", () => {
 
     axios({
         method: 'post',
-        url: '/main/',
+        url: '/upload/',
         data: {
             "file": _('id_file').files[0]
         },
@@ -40,10 +40,5 @@ function postFile() {
                 _('progress-bar-file').innerHTML = percent + '%';
             }
         }
-    }).then((response) => {
-        console.log(response);
-        setTimeout(() => {
-            fetch('/').then((response) => document.ht);
-        }, 2 * 1000);
     });
-}
+});

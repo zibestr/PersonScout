@@ -3,9 +3,7 @@ from django.urls import path
 
 
 urlpatterns = [
-    path('', views.root_page),
-    path('main/', views.main_page, name='main-page'),
+    path('', views.root_page, name='root-page'),
     path('hr_main/', views.hr_main_view, name='hr-page'),
-    path('vacancies/', views.vacancies_page, name='vacancies-page'),
-    path('vacancy-info/<int:pk>', views.vacancy_info_view, name='vacancy-info')
+    path('cand-info/<int:pk>', views.hr_show_candidates, name='cand-info')
 ]

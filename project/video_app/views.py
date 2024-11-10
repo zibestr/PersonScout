@@ -5,53 +5,52 @@ import base64
 from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
 from django.http import HttpRequest, HttpResponseRedirect, HttpResponse
-from .models import Video, PersonalityGroup, Personality, Vacancy
-from .forms import UploadFileForm
-from django.contrib.auth.decorators import user_passes_test
-from . import utils
+from .models import Video, PersonalityGroup, Personality, Speciality
+from login.models import CustomUser
+from django.contrib.auth.decorators import user_passes_test, login_required
 from . import tasks
+from .forms import FileFieldForm
+import numpy as np
+from .utils import OCEAN2MBTI
+from pgvector.django import L2Distance
 
 
 def root_page(request: HttpRequest):
     if not request.user.is_authenticated:
         return redirect(reverse_lazy('login-page'))
-    return redirect(reverse_lazy('main-page'))
-
-
-def main_page(request: HttpRequest):
     if request.user.is_superuser:
         return redirect(reverse_lazy('hr-page'))
-    if request.method == 'POST':
-        form = UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            file = request.FILES['file'].read()
-            byte = base64.b64encode(file)
-
-            data = {'file': byte.decode('utf-8'),
-                    'name': request.FILES['file'].name}
-
-            # tasks.task_upload_file.delay(data=data)
-            Video.objects.create(file=file)
-            return HttpResponse('Fine')
-    else:
-        form = UploadFileForm()
-    return render(request, 'video_app/index.html', {'form': form,
-                                                    'groups': PersonalityGroup.objects.all()})
+    return redirect(reverse_lazy('account-page', kwargs={'pk': request.user.id}))
 
 
 @user_passes_test(lambda u: u.is_superuser)
 def hr_main_view(request):
-    personality_rows = [Personality.objects.all()[i::4] for i in range(4)]
+    if request.method == 'POST':
+        form = FileFieldForm(request.POST, request.FILES)
+        if form.is_valid():
+            for f in form.cleaned_data['video']:
+                Video.objects.create(file=f, vector=np.random.random((5,)))
+            speciality = form.cleaned_data['speciality']
+            cand_number = form.cleaned_data['candidate_number']
+
+            return render(request, 'video_app/hr_main.html', 
+                          {'show': True,
+                           'user_info': [{'user': user,
+                                          'mbti': OCEAN2MBTI(user.video.vector) if user.video is not None else None}
+                                           for user in CustomUser.objects.filter(is_superuser=False)
+                                                        .order_by(L2Distance('video__vector', speciality.vector))[:cand_number]]})
+    else:
+        form = FileFieldForm()
     return render(request, 'video_app/hr_main.html',
-                  {'groups': PersonalityGroup.objects.all(),
-                   'personality_rows': personality_rows})
+                  {'form': form,
+                   'specialities': Speciality.objects.all(),
+                   'show': False})
 
 
-def vacancies_page(request):
-    return render(request, 'video_app/vacancies.html',
-                  {'vacancies': Vacancy.objects.all()})
-
-
-def vacancy_info_view(request, pk: int):
-    return render(request, 'video_app/vacancy_description.html',
-                  {'vacancy': Vacancy.objects.get(id=pk)})
+def hr_show_candidates(request, pk):
+    cand = CustomUser.objects.get(id=pk)
+    return render(request, 'video_app/candidat.html',
+                  {'cand': cand,
+                   'mbti': OCEAN2MBTI(cand.video.vector.tolist() if cand.video is not None
+                                      else None),
+                   'ocean': cand.video.vector.tolist() if cand.video is not None else None})

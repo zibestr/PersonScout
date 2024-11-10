@@ -1,6 +1,8 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django import forms
 
 from .models import CustomUser
+from video_app.models import Speciality
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -20,10 +22,20 @@ class CustomUserCreationForm(UserCreationForm):
         }
 
 
-class CustomUserChangeForm(UserChangeForm):
+class UserForm(forms.Form):
+    profile_picture = forms.ImageField(required=False)
+    first_name = forms.CharField(max_length=40, required=False)
+    last_name = forms.CharField(max_length=40, required=False)
+    patronymic = forms.CharField(max_length=40, required=False)
+    video = forms.FileField(required=False)
+    speciality = forms.ModelChoiceField(queryset=Speciality.objects.all(), required=False,
+                                        to_field_name='name')
 
-    class Meta:
-        model = CustomUser
-        fields = ("first_name", "last_name", "patronymic")
-        exclude = ("password",)
-        usable_password = None
+
+# class CustomUserChangeForm(UserChangeForm):
+
+#     class Meta:
+#         model = CustomUser
+#         fields = ("first_name", "last_name", "patronymic", "profile_picture", "video__file", "preferred_speciality")
+#         exclude = ("password",)
+#         usable_password = None

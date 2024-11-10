@@ -1,0 +1,64 @@
+{% extends 'video_app/base.html' %}
+{% load static %}
+{% block main %}
+<div class="container mt-5">
+    <div class="row justify-content-between">
+        <div class="col-md-5">
+            <h2>Профиль кандидата</h2>
+            {% if cand.profile_picture %}
+            <img src="{% get_media_prefix %}{{ cand.profile_picture.name }}" height="150" width="150">
+            {% endif %}
+            <div class="mb-3">
+                <h4>
+                    {{ cand.last_name|default:"" }} {{ cand.first_name|default:"" }} {{ cand.patronymic|default:"" }}
+                </h4>
+            </div>
+            <div class="mb-3">
+                <button class="btn btn-primary">Загрузить видеовизитку</button>
+            </div>
+
+            {% if ocean is not None %}
+            <!-- Radar Chart -->
+            <div class="mb-3">
+                <label class="form-label">Тест OCEAN</label>
+                <canvas id="radarChart" height="300" width="300"></canvas>
+            </div>
+            {% endif %}
+
+            <!-- Тип личности по MBTI -->
+            <div class="mb-3">
+                <label class="form-label">Тип личности по MBTI</label>
+                <h4 id="mbtiType">{{ mbti }}</h4>
+            </div>
+        </div>
+    </div>
+</div>
+{% if ocean %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var ctx = document.getElementById('radarChart');
+    var radarChart = new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels: ['Экстраверсия', 'Нейротизм', 'Открытость', 'Добросовестность', 'Уступчивость'],
+            datasets: [{
+                label: 'Личностные характеристики',
+                data: {{ ocean }},
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                r: {
+                    suggestedMin: 0,
+                    suggestedMax: 1
+                }
+            }
+        }
+    });
+</script>
+{% endif %}
+
+{% endblock %}

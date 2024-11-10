@@ -1,29 +1,53 @@
 {% extends 'video_app/base.html' %}
 {% load static %}
 {% block main %}
-<div>
-    <table class="table">
-        <thead>
-            <tr>
-                {% for g in groups %}
-                <th scope="col">{{ g }}</th>
-                {% endfor %}
-            </tr>
-        </thead>
-        <tbody>
-            {% for row in personality_rows %}
-            <tr>
-                {% for p in row %}
-                    <td>{{ p }}</td>
-                {% endfor %}
-            </tr>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-5">
+            <form id="uploadForm" enctype="multipart/form-data" method="post" action="">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="{{ form.video.id_for_label }}" class="form-label">Прикрепите видеофайлы (до 5)</label>
+                    <input type="file" class="form-control" id="{{ form.video.id_for_label }}"
+                     name="{{ form.video.name }}" multiple accept="video/*" required>
+                </div>
+                <div class="mb-3">
+                    <label for="{{ form.speciality.id_for_label }}" class="form-label">Выберите специальность</label>
+                    <select class="form-select" id="{{ form.speciality.id_for_label }}" name="{{ form.speciality.name }}" required>
+                        {% for speciality in specialities %}
+                        {% if speciality.name == form.speciality.name %}
+                        <option selected>{{ speciality }}</option>
+                        {% else %}
+                        <option selected>{{ speciality }}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="{{ form.candidate_number.id_for_label }}" class="form-label">Количество кандидатов (от 1 до 10)</label>
+                    <input type="number" class="form-control" id="{{ form.candidate_number.id_for_label }}" name="{{ form.candidate_number.name }}" min="1" max="10" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Отправить</button>
+            </form>
+        </div>
+        
+        {% if show %}
+        <div id="candidateCards" class="col-md-5">
+            {% for person in user_info %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">{{ person.user.last_name|default:"" }} {{ person.user.first_name|default:"" }} {{ person.user.patronymic|default:"" }}</h5>
+                    <p class="card-text">Тип личности: {{ person.mbti }}</p>
+                    <a href="{% url 'cand-info' pk=person.user.id %}">
+                        <button type="button" class="btn btn-primary">
+                            Открыть
+                        </button>
+                    </a>
+                </div>
+            </div>
             {% endfor %}
-        </tbody>
-        <!-- <tr>
-            {% for g in groups %}
-            <th>{{ g }}</th>
-            {% endfor %}
-        </tr> -->
-    </table>
+        </div>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}
